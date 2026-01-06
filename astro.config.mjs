@@ -5,7 +5,8 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://ai-for-us.github.io',
+  site: 'https://sherlo-cat.github.io',
+  base: '/ai-for-us.github.io',
   integrations: [
     react(),
     tailwind({
