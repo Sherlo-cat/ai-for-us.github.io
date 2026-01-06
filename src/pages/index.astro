@@ -2,5 +2,7 @@
 // Root index - Redirects to default language
 import { defaultLang } from '@/i18n/config';
 
-return Astro.redirect(`/${defaultLang}`);
+// Use import.meta.env.BASE_URL to include the base path in redirect
+const basePath = import.meta.env.BASE_URL || '/';
+return Astro.redirect(`${basePath}${defaultLang}/`);
 ---
