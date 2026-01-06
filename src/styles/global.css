@@ -1,0 +1,207 @@
+/* Global Styles for AI-for-us Website */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Font Face Definitions */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-var.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono.woff2') format('woff2');
+}
+
+/* Base Layer Customizations */
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-white text-slate-800 dark:bg-obsidian dark:text-slate-200;
+    @apply font-sans antialiased;
+    @apply transition-colors duration-300;
+  }
+
+  /* Typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans font-bold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h4 {
+    @apply text-xl md:text-2xl;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+
+  a {
+    @apply text-neon-cyan hover:text-electric-purple transition-colors duration-200;
+  }
+
+  code {
+    @apply font-mono text-sm bg-deep-space/50 dark:bg-deep-space px-1.5 py-0.5 rounded;
+  }
+
+  pre {
+    @apply font-mono text-sm bg-deep-space dark:bg-obsidian p-4 rounded-lg overflow-x-auto;
+  }
+
+  pre code {
+    @apply bg-transparent p-0;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-neon-cyan/30 text-slate-800 dark:text-slate-200;
+  }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-deep-space/20;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-neon-cyan/50 rounded-full hover:bg-neon-cyan/70;
+  }
+}
+
+/* Component Layer */
+@layer components {
+  /* Glassmorphism Effect */
+  .glass {
+    @apply bg-white/10 dark:bg-obsidian/50 backdrop-blur-md;
+    @apply border border-white/20 dark:border-white/10;
+  }
+
+  /* Glow Effect */
+  .glow {
+    @apply shadow-[0_0_15px_rgba(102,252,241,0.5)];
+  }
+
+  .glow-hover:hover {
+    @apply shadow-[0_0_25px_rgba(102,252,241,0.7)];
+  }
+
+  /* Card Styles */
+  .card {
+    @apply bg-white dark:bg-deep-space/50;
+    @apply rounded-xl p-6;
+    @apply border border-slate-200 dark:border-white/10;
+    @apply transition-all duration-300;
+    @apply hover:border-neon-cyan/50 hover:shadow-lg;
+  }
+
+  /* Button Styles */
+  .btn {
+    @apply inline-flex items-center justify-center;
+    @apply px-6 py-3 rounded-full;
+    @apply font-medium text-sm;
+    @apply transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-neon-cyan focus:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-neon-cyan text-obsidian;
+    @apply hover:bg-neon-cyan/90 hover:scale-105;
+    @apply active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply btn bg-transparent border-2 border-neon-cyan text-neon-cyan;
+    @apply hover:bg-neon-cyan/10;
+    @apply active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-slate-400;
+    @apply hover:text-neon-cyan hover:bg-white/5;
+  }
+
+  /* Link Underline Animation */
+  .link-underline {
+    @apply relative;
+  }
+
+  .link-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-1/2 w-0 h-0.5 bg-neon-cyan;
+    @apply transition-all duration-300 -translate-x-1/2;
+  }
+
+  .link-underline:hover::after {
+    @apply w-full;
+  }
+
+  /* Container */
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Utility Layer */
+@layer utilities {
+  /* Text Gradient */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-neon-cyan to-electric-purple;
+  }
+
+  /* Background Gradient */
+  .bg-gradient-dark {
+    @apply bg-gradient-to-b from-obsidian to-deep-space;
+  }
+
+  /* Animation Delays */
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

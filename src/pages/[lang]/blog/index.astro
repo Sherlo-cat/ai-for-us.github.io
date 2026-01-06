@@ -1,0 +1,128 @@
+---
+// Blog Listing Page - Shows all blog posts for the current language
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { languages, type Language } from '@/i18n/config';
+import { useTranslations } from '@/i18n';
+import { getCollection } from 'astro:content';
+import PostCard from '@/components/PostCard.astro';
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({
+    params: { lang },
+  }));
+}
+
+const { lang } = Astro.params as { lang: Language };
+const t = useTranslations(lang);
+
+// Get all blog posts for this language
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.language === lang && !data.draft;
+});
+
+// Sort by date (newest first)
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// Get unique tags
+const allTags = [...new Set(sortedPosts.flatMap((post) => post.data.tags))];
+---
+
+<BaseLayout title={`${t('blog.title')} | AI for Us`} lang={lang}>
+  <div class="pt-24 pb-16 bg-gradient-dark min-h-screen">
+    <div class="container-custom">
+      <!-- Header -->
+      <div class="text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          <span class="text-gradient">{t('blog.title')}</span>
+        </h1>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+          Exploring AI technologies, sharing insights, and documenting the journey.
+        </p>
+      </div>
+      
+      <!-- Tags Filter -->
+      {allTags.length > 0 && (
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+          <button 
+            class="tag-filter active px-4 py-2 rounded-full text-sm transition-all"
+            data-tag="all"
+          >
+            All
+          </button>
+          {allTags.map((tag) => (
+            <button 
+              class="tag-filter px-4 py-2 rounded-full text-sm transition-all"
+              data-tag={tag}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      )}
+      
+      <!-- Posts Grid -->
+      {sortedPosts.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="posts-grid">
+          {sortedPosts.map((post) => (
+            <div class="post-item" data-tags={post.data.tags.join(',')}>
+              <PostCard post={post} lang={lang} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-20">
+          <svg class="w-24 h-24 mx-auto text-slate-600 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <p class="text-slate-400 text-xl">{t('blog.noArticles')}</p>
+        </div>
+      )}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .tag-filter {
+    @apply bg-transparent border border-slate-600 text-slate-400;
+  }
+  
+  .tag-filter:hover {
+    @apply border-neon-cyan text-neon-cyan;
+  }
+  
+  .tag-filter.active {
+    @apply bg-neon-cyan border-neon-cyan text-obsidian;
+  }
+</style>
+
+<script>
+  function initTagFilter() {
+    const tagButtons = document.querySelectorAll('.tag-filter');
+    const postItems = document.querySelectorAll('.post-item');
+    
+    tagButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        // Update active state
+        tagButtons.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const selectedTag = btn.getAttribute('data-tag');
+        
+        // Filter posts
+        postItems.forEach((item) => {
+          const tags = item.getAttribute('data-tags')?.split(',') || [];
+          if (selectedTag === 'all' || tags.includes(selectedTag!)) {
+            (item as HTMLElement).style.display = 'block';
+          } else {
+            (item as HTMLElement).style.display = 'none';
+          }
+        });
+      });
+    });
+  }
+  
+  document.addEventListener('DOMContentLoaded', initTagFilter);
+  document.addEventListener('astro:page-load', initTagFilter);
+</script>

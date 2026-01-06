@@ -1,0 +1,192 @@
+---
+// Blog Post Page - Dynamic route for individual posts
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { languages, type Language } from '@/i18n/config';
+import { useTranslations } from '@/i18n';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  
+  const paths = [];
+  for (const lang of Object.keys(languages)) {
+    const langPosts = posts.filter((post) => post.data.language === lang);
+    for (const post of langPosts) {
+      paths.push({
+        params: { 
+          lang, 
+          slug: post.slug.split('/').pop() 
+        },
+        props: { post },
+      });
+    }
+  }
+  
+  return paths;
+}
+
+const { post } = Astro.props;
+const { lang } = Astro.params as { lang: Language };
+const t = useTranslations(lang);
+
+const { Content } = await post.render();
+const { title, description, pubDate, author, tags, image } = post.data;
+
+// Format date
+const formattedDate = pubDate.toLocaleDateString(
+  lang === 'zh' ? 'zh-CN' : lang === 'ja' ? 'ja-JP' : lang === 'es' ? 'es-ES' : 'en-US',
+  { year: 'numeric', month: 'long', day: 'numeric' }
+);
+
+// Calculate read time
+const readTime = Math.ceil(post.body.split(/\s+/).length / 200);
+---
+
+<BaseLayout 
+  title={`${title} | AI for Us`} 
+  description={description}
+  image={image?.url}
+  lang={lang}
+>
+  <article class="pt-24 pb-16 bg-gradient-dark min-h-screen">
+    <div class="container-custom max-w-4xl">
+      <!-- Back Link -->
+      <a 
+        href={`/${lang}/blog`}
+        class="inline-flex items-center text-slate-400 hover:text-neon-cyan mb-8"
+      >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        {t('common.backToHome')}
+      </a>
+      
+      <!-- Header -->
+      <header class="mb-12">
+        <!-- Tags -->
+        {tags.length > 0 && (
+          <div class="flex flex-wrap gap-2 mb-4">
+            {tags.map((tag) => (
+              <span class="text-xs px-3 py-1 rounded-full bg-neon-cyan/10 text-neon-cyan">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+        
+        <!-- Title -->
+        <h1 class="text-4xl md:text-5xl font-bold text-slate-200 mb-6">
+          {title}
+        </h1>
+        
+        <!-- Meta -->
+        <div class="flex items-center space-x-4 text-slate-400">
+          <span>{author}</span>
+          <span>•</span>
+          <span>{formattedDate}</span>
+          <span>•</span>
+          <span>{readTime} {t('blog.minuteRead')}</span>
+        </div>
+      </header>
+      
+      <!-- Cover Image -->
+      {image && (
+        <div class="relative h-64 md:h-96 mb-12 rounded-2xl overflow-hidden">
+          <img 
+            src={image.url} 
+            alt={image.alt}
+            class="w-full h-full object-cover"
+          />
+        </div>
+      )}
+      
+      <!-- Content -->
+      <div class="prose prose-invert prose-lg max-w-none">
+        <Content />
+      </div>
+      
+      <!-- Footer -->
+      <footer class="mt-16 pt-8 border-t border-white/10">
+        <div class="flex justify-between items-center">
+          <a 
+            href={`/${lang}/blog`}
+            class="btn-secondary"
+          >
+            ← {t('blog.title')}
+          </a>
+        </div>
+      </footer>
+    </div>
+  </article>
+</BaseLayout>
+
+<style is:global>
+  /* Prose Styling for Markdown Content */
+  .prose {
+    @apply text-slate-300;
+  }
+  
+  .prose h1, .prose h2, .prose h3, .prose h4 {
+    @apply text-slate-200 font-bold mt-8 mb-4;
+  }
+  
+  .prose h2 {
+    @apply text-3xl border-b border-white/10 pb-2;
+  }
+  
+  .prose h3 {
+    @apply text-2xl;
+  }
+  
+  .prose p {
+    @apply mb-4 leading-relaxed;
+  }
+  
+  .prose a {
+    @apply text-neon-cyan hover:text-electric-purple underline;
+  }
+  
+  .prose strong {
+    @apply text-slate-200 font-semibold;
+  }
+  
+  .prose ul, .prose ol {
+    @apply my-4 pl-6;
+  }
+  
+  .prose li {
+    @apply mb-2;
+  }
+  
+  .prose ul li {
+    @apply list-disc;
+  }
+  
+  .prose ol li {
+    @apply list-decimal;
+  }
+  
+  .prose blockquote {
+    @apply border-l-4 border-neon-cyan pl-4 italic text-slate-400 my-6;
+  }
+  
+  .prose code {
+    @apply bg-deep-space px-1.5 py-0.5 rounded text-neon-cyan text-sm;
+  }
+  
+  .prose pre {
+    @apply bg-deep-space p-4 rounded-lg overflow-x-auto my-6;
+  }
+  
+  .prose pre code {
+    @apply bg-transparent p-0;
+  }
+  
+  .prose hr {
+    @apply border-white/10 my-8;
+  }
+  
+  .prose img {
+    @apply rounded-lg my-6;
+  }
+</style>

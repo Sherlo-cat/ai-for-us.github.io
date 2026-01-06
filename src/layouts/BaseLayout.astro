@@ -1,0 +1,106 @@
+---
+// Base Layout - The foundational layout for all pages
+import '../styles/global.css';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import { type Language, defaultLang, languages } from '@/i18n/config';
+import { getAlternatePaths } from '@/i18n/utils';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  lang?: Language;
+}
+
+const { 
+  title, 
+  description = 'AI Engineer Personal Blog - Exploring the Future of Artificial Intelligence',
+  image = '/og-image.png',
+  lang = defaultLang 
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const alternatePaths = getAlternatePaths(Astro.url.pathname);
+---
+
+<!doctype html>
+<html lang={lang} class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalURL} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.site)} />
+    
+    <!-- Alternate Language Links -->
+    {Object.entries(alternatePaths).map(([langCode, path]) => (
+      <link rel="alternate" hreflang={langCode} href={new URL(path, Astro.site)} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={new URL(alternatePaths[defaultLang], Astro.site)} />
+    
+    <!-- Preload Fonts -->
+    <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- Theme Script (Prevent Flash) -->
+    <script is:inline>
+      const getThemePreference = () => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      };
+      const theme = getThemePreference();
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col bg-gradient-dark">
+    <Header lang={lang} />
+    
+    <main class="flex-grow">
+      <slot />
+    </main>
+    
+    <Footer lang={lang} />
+    
+    <!-- Theme Toggle Script -->
+    <script>
+      function initTheme() {
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        const updateTheme = (theme: string) => {
+          document.documentElement.classList.toggle('dark', theme === 'dark');
+          localStorage.setItem('theme', theme);
+        };
+        
+        themeToggle?.addEventListener('click', () => {
+          const isDark = document.documentElement.classList.contains('dark');
+          updateTheme(isDark ? 'light' : 'dark');
+        });
+      }
+      
+      document.addEventListener('DOMContentLoaded', initTheme);
+      document.addEventListener('astro:page-load', initTheme);
+    </script>
+  </body>
+</html>

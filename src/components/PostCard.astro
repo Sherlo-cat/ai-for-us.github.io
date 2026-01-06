@@ -1,0 +1,89 @@
+---
+// Post Card Component - Display blog post preview
+import type { CollectionEntry } from 'astro:content';
+import { type Language } from '@/i18n/config';
+import { useTranslations } from '@/i18n';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  lang: Language;
+}
+
+const { post, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const { title, description, pubDate, tags, image } = post.data;
+
+// Format date
+const formattedDate = pubDate.toLocaleDateString(lang === 'zh' ? 'zh-CN' : lang === 'ja' ? 'ja-JP' : lang === 'es' ? 'es-ES' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+// Calculate read time (rough estimate: 200 words per minute)
+const readTime = Math.ceil(post.body.split(/\s+/).length / 200);
+---
+
+<article class="card group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
+  <a href={`/${lang}/blog/${post.slug.split('/').pop()}`} class="block">
+    <!-- Image -->
+    {image && (
+      <div class="relative h-48 -mx-6 -mt-6 mb-6 overflow-hidden rounded-t-xl">
+        <img 
+          src={image.url} 
+          alt={image.alt}
+          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-deep-space/80 to-transparent"></div>
+      </div>
+    )}
+    
+    <!-- Content -->
+    <div class="space-y-3">
+      <!-- Tags -->
+      {tags.length > 0 && (
+        <div class="flex flex-wrap gap-2">
+          {tags.slice(0, 3).map((tag) => (
+            <span class="text-xs px-2 py-1 rounded-full bg-neon-cyan/10 text-neon-cyan">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+      
+      <!-- Title -->
+      <h3 class="text-xl font-bold text-slate-200 group-hover:text-neon-cyan transition-colors line-clamp-2">
+        {title}
+      </h3>
+      
+      <!-- Description -->
+      <p class="text-slate-400 text-sm line-clamp-3">
+        {description}
+      </p>
+      
+      <!-- Meta -->
+      <div class="flex items-center justify-between text-xs text-slate-500 pt-2">
+        <span>{formattedDate}</span>
+        <span>{readTime} {t('blog.minuteRead')}</span>
+      </div>
+    </div>
+  </a>
+</article>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

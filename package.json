@@ -1,0 +1,38 @@
+{
+  "name": "ai-for-us",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "AI Engineer Personal Website - Minimalist Tech Design",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/react": "^3.6.2",
+    "@astrojs/rss": "^4.0.9",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^5.1.2",
+    "@react-three/drei": "^9.88.0",
+    "@react-three/fiber": "^8.15.12",
+    "@types/three": "^0.160.0",
+    "astro": "^4.16.10",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.11.10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.4",
+    "three": "^0.160.0",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14"
+  }
+}
