@@ -1,7 +1,7 @@
 ---
 // Header Component - Navigation with glassmorphism effect
 import { type Language, languages, languageFlags } from '@/i18n/config';
-import { useTranslations, getLocalizedPath } from '@/i18n';
+import { useTranslations, getLocalizedPath, getLanguageSwitchUrl } from '@/i18n';
 import ThemeToggle from './ThemeToggle.astro';
 
 interface Props {
@@ -16,6 +16,9 @@ const navItems = [
   { key: 'nav.blog', path: 'blog' },
   { key: 'nav.about', path: 'about' },
 ];
+
+// Get the current path for language switching
+const currentPath = Astro.url.pathname;
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 glass">
@@ -48,34 +51,15 @@ const navItems = [
       
       <!-- Right Side: Language & Theme -->
       <div class="flex items-center space-x-4">
-        <!-- Language Switcher -->
-        <div class="relative group">
-          <button 
-            class="flex items-center space-x-1 text-slate-200 hover:text-neon-cyan transition-colors"
-            aria-label="Switch language"
-          >
-            <span>{languageFlags[lang]}</span>
-            <span class="hidden sm:inline">{languages[lang]}</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </button>
-          
-          <!-- Dropdown -->
-          <div class="absolute right-0 mt-2 w-40 py-2 glass rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-            {Object.entries(languages).map(([code, name]) => (
-              <a
-                href={getLocalizedPath(Astro.url.pathname.replace(`/${lang}`, ''), code as Language)}
-                class={`flex items-center space-x-2 px-4 py-2 hover:bg-neon-cyan/10 transition-colors ${
-                  code === lang ? 'text-neon-cyan' : 'text-slate-200'
-                }`}
-              >
-                <span>{languageFlags[code as Language]}</span>
-                <span>{name}</span>
-              </a>
-            ))}
-          </div>
-        </div>
+        <!-- Language Switcher - Simple toggle between EN and ZH -->
+        <a 
+          href={getLanguageSwitchUrl(currentPath, lang)}
+          class="flex items-center space-x-1 text-slate-200 hover:text-neon-cyan transition-colors px-3 py-1 rounded-full border border-slate-600 hover:border-neon-cyan"
+          aria-label="Switch language"
+        >
+          <span>{lang === 'en' ? '🇨🇳' : '🇺🇸'}</span>
+          <span class="hidden sm:inline text-sm">{lang === 'en' ? '中文' : 'English'}</span>
+        </a>
         
         <!-- Theme Toggle -->
         <ThemeToggle />

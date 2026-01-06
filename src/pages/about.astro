@@ -1,15 +1,9 @@
 ---
-// Chinese About Page
+// English About Page
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { type Language } from '@/i18n/config';
 import { useTranslations } from '@/i18n';
 
-// Only generate Chinese page
-export function getStaticPaths() {
-  return [{ params: { lang: 'zh' } }];
-}
-
-const { lang } = Astro.params as { lang: Language };
+const lang = 'en';
 const t = useTranslations(lang);
 ---
 

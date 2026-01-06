@@ -18,20 +18,12 @@ export default defineConfig({
         locales: {
           en: 'en-US',
           zh: 'zh-CN',
-          ja: 'ja-JP',
-          es: 'es-ES',
         },
       },
     }),
   ],
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'zh', 'ja', 'es'],
-    routing: {
-      prefixDefaultLocale: true,
-      redirectToDefaultLocale: true,
-    },
-  },
+  // Disable built-in i18n routing - using manual routing instead
+  // English at root (/), Chinese at /zh/
   output: 'static',
   build: {
     assets: 'assets',

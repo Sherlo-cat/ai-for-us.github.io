@@ -2,7 +2,7 @@
 // Post Card Component - Display blog post preview
 import type { CollectionEntry } from 'astro:content';
 import { type Language } from '@/i18n/config';
-import { useTranslations } from '@/i18n';
+import { useTranslations, getLocalizedPath } from '@/i18n';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -15,7 +15,7 @@ const t = useTranslations(lang);
 const { title, description, pubDate, tags, image } = post.data;
 
 // Format date
-const formattedDate = pubDate.toLocaleDateString(lang === 'zh' ? 'zh-CN' : lang === 'ja' ? 'ja-JP' : lang === 'es' ? 'es-ES' : 'en-US', {
+const formattedDate = pubDate.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -23,10 +23,14 @@ const formattedDate = pubDate.toLocaleDateString(lang === 'zh' ? 'zh-CN' : lang 
 
 // Calculate read time (rough estimate: 200 words per minute)
 const readTime = Math.ceil(post.body.split(/\s+/).length / 200);
+
+// Get the correct blog post URL based on language
+const postSlug = post.slug.split('/').pop();
+const postUrl = getLocalizedPath(`blog/${postSlug}`, lang);
 ---
 
 <article class="card group cursor-pointer hover:scale-[1.02] transition-transform duration-300">
-  <a href={`/${lang}/blog/${post.slug.split('/').pop()}`} class="block">
+  <a href={postUrl} class="block">
     <!-- Image -->
     {image && (
       <div class="relative h-48 -mx-6 -mt-6 mb-6 overflow-hidden rounded-t-xl">

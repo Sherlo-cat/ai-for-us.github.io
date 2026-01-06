@@ -1,35 +1,30 @@
 ---
-// Chinese Blog Post Page
+// English Blog Post Page
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { type Language } from '@/i18n/config';
 import { useTranslations } from '@/i18n';
 import { getCollection } from 'astro:content';
 
-// Only generate Chinese blog posts
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   
-  // Only Chinese posts
-  const zhPosts = posts.filter((post) => post.data.language === 'zh');
+  // Only English posts
+  const enPosts = posts.filter((post) => post.data.language === 'en');
   
-  return zhPosts.map((post) => ({
-    params: {
-      lang: 'zh',
-      slug: post.slug.split('/').pop()
-    },
+  return enPosts.map((post) => ({
+    params: { slug: post.slug.split('/').pop() },
     props: { post },
   }));
 }
 
 const { post } = Astro.props;
-const { lang } = Astro.params as { lang: Language };
+const lang = 'en';
 const t = useTranslations(lang);
 
 const { Content } = await post.render();
 const { title, description, pubDate, author, tags, image } = post.data;
 
 // Format date
-const formattedDate = pubDate.toLocaleDateString('zh-CN', {
+const formattedDate = pubDate.toLocaleDateString('en-US', {
   year: 'numeric', month: 'long', day: 'numeric'
 });
 
@@ -47,7 +42,7 @@ const readTime = Math.ceil(post.body.split(/\s+/).length / 200);
     <div class="container-custom max-w-4xl">
       <!-- Back Link -->
       <a 
-        href={`/${lang}/blog`}
+        href="/blog"
         class="inline-flex items-center text-slate-400 hover:text-neon-cyan mb-8"
       >
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,7 +99,7 @@ const readTime = Math.ceil(post.body.split(/\s+/).length / 200);
       <footer class="mt-16 pt-8 border-t border-white/10">
         <div class="flex justify-between items-center">
           <a 
-            href={`/${lang}/blog`}
+            href="/blog"
             class="btn-secondary"
           >
             ← {t('blog.title')}

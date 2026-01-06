@@ -1,22 +1,16 @@
 ---
-// Chinese Blog Listing Page
+// English Blog Listing Page
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { type Language } from '@/i18n/config';
 import { useTranslations } from '@/i18n';
 import { getCollection } from 'astro:content';
 import PostCard from '@/components/PostCard.astro';
 
-// Only generate Chinese page
-export function getStaticPaths() {
-  return [{ params: { lang: 'zh' } }];
-}
-
-const { lang } = Astro.params as { lang: Language };
+const lang = 'en';
 const t = useTranslations(lang);
 
-// Get all blog posts for this language
+// Get all blog posts for English
 const allPosts = await getCollection('blog', ({ data }) => {
-  return data.language === lang && !data.draft;
+  return data.language === 'en' && !data.draft;
 });
 
 // Sort by date (newest first)

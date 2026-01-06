@@ -42,6 +42,14 @@ export const ui: Record<Language, Record<string, string>> = {
     'common.error': 'Something went wrong',
     'common.backToHome': 'Back to Home',
     'common.tags': 'Tags',
+    
+    // Features Section
+    'feature.insights.title': 'AI Insights',
+    'feature.insights.desc': 'Deep dives into the latest AI technologies and their real-world applications.',
+    'feature.tutorials.title': 'Technical Tutorials',
+    'feature.tutorials.desc': 'Hands-on guides to help you build and deploy AI-powered solutions.',
+    'feature.trends.title': 'Industry Trends',
+    'feature.trends.desc': 'Stay updated with the evolving landscape of artificial intelligence.',
   },
   
   zh: {
@@ -82,87 +90,16 @@ export const ui: Record<Language, Record<string, string>> = {
     'common.error': '出错了',
     'common.backToHome': '返回首页',
     'common.tags': '标签',
+    
+    // Features Section
+    'feature.insights.title': 'AI 洞察',
+    'feature.insights.desc': '深入探索最新的AI技术及其在现实世界中的应用。',
+    'feature.tutorials.title': '技术教程',
+    'feature.tutorials.desc': '实战指南，帮助你构建和部署AI驱动的解决方案。',
+    'feature.trends.title': '行业趋势',
+    'feature.trends.desc': '紧跟人工智能领域不断演进的最新动态。',
   },
   
-  ja: {
-    // Navigation
-    'nav.home': 'ホーム',
-    'nav.blog': 'ブログ',
-    'nav.about': '紹介',
-    
-    // Hero Section
-    'hero.title': 'AIエンジニア',
-    'hero.subtitle': '人工知能の未来を探る',
-    'hero.cta': '記事を見る',
-    
-    // Blog
-    'blog.title': '最新記事',
-    'blog.readMore': '続きを読む',
-    'blog.publishedOn': '公開日',
-    'blog.minuteRead': '分で読める',
-    'blog.noArticles': '記事がありません。',
-    
-    // About
-    'about.title': '私について',
-    
-    // Footer
-    'footer.copyright': '© 2024 AI for Us. All rights reserved.',
-    'footer.builtWith': 'Astro & React で構築',
-    
-    // Theme
-    'theme.light': 'ライトモード',
-    'theme.dark': 'ダークモード',
-    'theme.system': 'システム設定',
-    
-    // Language
-    'lang.switch': '言語を切り替える',
-    
-    // Common
-    'common.loading': '読み込み中...',
-    'common.error': 'エラーが発生しました',
-    'common.backToHome': 'ホームに戻る',
-    'common.tags': 'タグ',
-  },
-  
-  es: {
-    // Navigation
-    'nav.home': 'Inicio',
-    'nav.blog': 'Blog',
-    'nav.about': 'Acerca de',
-    
-    // Hero Section
-    'hero.title': 'Ingeniero de IA',
-    'hero.subtitle': 'Explorando el Futuro de la Inteligencia Artificial',
-    'hero.cta': 'Explorar Artículos',
-    
-    // Blog
-    'blog.title': 'Últimos Artículos',
-    'blog.readMore': 'Leer Más',
-    'blog.publishedOn': 'Publicado el',
-    'blog.minuteRead': 'min de lectura',
-    'blog.noArticles': 'No se encontraron artículos.',
-    
-    // About
-    'about.title': 'Sobre Mí',
-    
-    // Footer
-    'footer.copyright': '© 2024 AI for Us. Todos los derechos reservados.',
-    'footer.builtWith': 'Construido con Astro & React',
-    
-    // Theme
-    'theme.light': 'Modo Claro',
-    'theme.dark': 'Modo Oscuro',
-    'theme.system': 'Sistema',
-    
-    // Language
-    'lang.switch': 'Cambiar Idioma',
-    
-    // Common
-    'common.loading': 'Cargando...',
-    'common.error': 'Algo salió mal',
-    'common.backToHome': 'Volver al Inicio',
-    'common.tags': 'Etiquetas',
-  },
 };
 
 /**

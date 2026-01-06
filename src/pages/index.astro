@@ -1,8 +1,129 @@
 ---
-// Root index - Redirects to default language
-import { defaultLang } from '@/i18n/config';
+// English Home Page (Default)
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { useTranslations } from '@/i18n';
+import { getCollection } from 'astro:content';
+import ParticleSphere from '@/components/react/ParticleSphere';
+import PostCard from '@/components/PostCard.astro';
 
-// Use import.meta.env.BASE_URL to include the base path in redirect
-const basePath = import.meta.env.BASE_URL || '/';
-return Astro.redirect(`${basePath}${defaultLang}/`);
+const lang = 'en';
+const t = useTranslations(lang);
+
+// Get latest blog posts for English
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.language === 'en' && !data.draft;
+});
+
+const latestPosts = allPosts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
 ---
+
+<BaseLayout title={`${t('hero.title')} | AI for Us`} lang={lang}>
+  <!-- Hero Section with 3D Particle Sphere -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+    <!-- 3D Particle Sphere Background -->
+    <div class="absolute inset-0 z-0">
+      <ParticleSphere client:only="react" />
+    </div>
+    
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 z-10 bg-gradient-to-b from-obsidian/30 via-transparent to-obsidian pointer-events-none"></div>
+    
+    <!-- Hero Content -->
+    <div class="relative z-20 container-custom text-center pointer-events-none">
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6">
+        <span class="text-gradient">{t('hero.title')}</span>
+      </h1>
+      <p class="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto mb-10">
+        {t('hero.subtitle')}
+      </p>
+      <a
+        href="/blog"
+        class="btn-primary text-lg px-8 py-4 pointer-events-auto"
+      >
+        {t('hero.cta')}
+        <svg class="inline-block w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </svg>
+      </a>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+      <svg class="w-6 h-6 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+      </svg>
+    </div>
+  </section>
+  
+  <!-- Latest Articles Section -->
+  <section class="py-24 bg-obsidian">
+    <div class="container-custom">
+      <div class="flex justify-between items-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-slate-200">
+          {t('blog.title')}
+        </h2>
+        <a 
+          href="/blog"
+          class="text-neon-cyan hover:text-electric-purple transition-colors flex items-center space-x-2"
+        >
+          <span>{t('blog.readMore')}</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+      
+      {latestPosts.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {latestPosts.map((post) => (
+            <PostCard post={post} lang={lang} />
+          ))}
+        </div>
+      ) : (
+        <p class="text-slate-400 text-center py-12">{t('blog.noArticles')}</p>
+      )}
+    </div>
+  </section>
+  
+  <!-- Features Section -->
+  <section class="py-24 bg-deep-space/50">
+    <div class="container-custom">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="card text-center">
+          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-neon-cyan/10 flex items-center justify-center">
+            <svg class="w-8 h-8 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-200 mb-3">{t('feature.insights.title')}</h3>
+          <p class="text-slate-400">{t('feature.insights.desc')}</p>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="card text-center">
+          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-electric-purple/10 flex items-center justify-center">
+            <svg class="w-8 h-8 text-electric-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-200 mb-3">{t('feature.tutorials.title')}</h3>
+          <p class="text-slate-400">{t('feature.tutorials.desc')}</p>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="card text-center">
+          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-neon-cyan/10 flex items-center justify-center">
+            <svg class="w-8 h-8 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-200 mb-3">{t('feature.trends.title')}</h3>
+          <p class="text-slate-400">{t('feature.trends.desc')}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
